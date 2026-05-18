@@ -1,0 +1,263 @@
+/* ===== NexusPlay Global Styles ===== */
+:root {
+  --np-bg: #0a0a0f;
+  --np-surface: #12121a;
+  --np-card: #1a1a26;
+  --np-border: #2a2a3e;
+  --np-primary: #ff3c6e;
+  --np-secondary: #7b2fff;
+  --np-accent: #00e5ff;
+  --np-yellow: #ffe600;
+  --np-green: #00ff88;
+  --np-text: #f0f0ff;
+  --np-muted: #8888aa;
+  --np-gradient: linear-gradient(135deg, #ff3c6e, #7b2fff);
+  --np-glow-pink: 0 0 20px rgba(255, 60, 110, 0.4);
+  --np-glow-purple: 0 0 20px rgba(123, 47, 255, 0.4);
+  --np-glow-cyan: 0 0 20px rgba(0, 229, 255, 0.4);
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-body: 'Outfit', sans-serif;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--np-bg);
+  color: var(--np-text);
+  font-family: var(--font-body);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--np-bg); }
+::-webkit-scrollbar-thumb { background: var(--np-secondary); border-radius: 3px; }
+
+/* ===== Typography ===== */
+h1, h2, h3, .display-font {
+  font-family: var(--font-display);
+  letter-spacing: 0.02em;
+}
+
+/* ===== Buttons ===== */
+.btn-nexus {
+  background: var(--np-gradient);
+  border: none;
+  color: white;
+  font-family: var(--font-body);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  padding: 0.6rem 1.5rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-nexus::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: white;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.btn-nexus:hover::after { opacity: 0.1; }
+.btn-nexus:hover { box-shadow: var(--np-glow-pink); transform: translateY(-1px); color: white; }
+.btn-nexus:active { transform: translateY(0); }
+
+.btn-nexus-outline {
+  background: transparent;
+  border: 1.5px solid var(--np-primary);
+  color: var(--np-primary);
+  font-family: var(--font-body);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  padding: 0.6rem 1.5rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.btn-nexus-outline:hover {
+  background: var(--np-primary);
+  color: white;
+  box-shadow: var(--np-glow-pink);
+}
+
+.btn-nexus-cyan {
+  background: transparent;
+  border: 1.5px solid var(--np-accent);
+  color: var(--np-accent);
+  font-family: var(--font-body);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  padding: 0.6rem 1.5rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+.btn-nexus-cyan:hover {
+  background: var(--np-accent);
+  color: var(--np-bg);
+  box-shadow: var(--np-glow-cyan);
+}
+
+/* ===== Cards ===== */
+.nexus-card {
+  background: var(--np-card);
+  border: 1px solid var(--np-border);
+  border-radius: 8px;
+  transition: all 0.25s ease;
+  overflow: hidden;
+}
+
+.nexus-card:hover {
+  border-color: var(--np-primary);
+  box-shadow: var(--np-glow-pink);
+  transform: translateY(-4px);
+}
+
+/* ===== Form Inputs ===== */
+.nexus-input {
+  background: var(--np-surface);
+  border: 1.5px solid var(--np-border);
+  color: var(--np-text);
+  font-family: var(--font-body);
+  border-radius: 4px;
+  padding: 0.65rem 1rem;
+  width: 100%;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  font-size: 0.95rem;
+}
+
+.nexus-input:focus {
+  outline: none;
+  border-color: var(--np-primary);
+  box-shadow: 0 0 0 3px rgba(255, 60, 110, 0.15);
+  background: var(--np-surface);
+  color: var(--np-text);
+}
+
+.nexus-input::placeholder { color: var(--np-muted); }
+
+.nexus-input.is-invalid {
+  border-color: #ff3c6e;
+}
+
+.nexus-label {
+  color: var(--np-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.4rem;
+  display: block;
+}
+
+/* ===== Badge / Tag ===== */
+.nexus-badge {
+  background: rgba(255, 60, 110, 0.15);
+  color: var(--np-primary);
+  border: 1px solid rgba(255, 60, 110, 0.3);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.2rem 0.6rem;
+  border-radius: 3px;
+}
+
+.nexus-badge-cyan {
+  background: rgba(0, 229, 255, 0.1);
+  color: var(--np-accent);
+  border: 1px solid rgba(0, 229, 255, 0.25);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.2rem 0.6rem;
+  border-radius: 3px;
+}
+
+/* ===== Divider ===== */
+.nexus-divider {
+  border: none;
+  height: 1px;
+  background: var(--np-border);
+  margin: 1.5rem 0;
+}
+
+/* ===== Noise overlay ===== */
+.noise-bg {
+  position: relative;
+}
+.noise-bg::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+/* ===== Page Fade-in ===== */
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(8px);
+}
+.page-leave-to {
+  opacity: 0;
+}
+
+/* ===== Alert ===== */
+.nexus-alert {
+  background: rgba(255, 60, 110, 0.1);
+  border: 1px solid rgba(255, 60, 110, 0.3);
+  color: var(--np-primary);
+  border-radius: 4px;
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+}
+
+.nexus-alert-success {
+  background: rgba(0, 255, 136, 0.1);
+  border: 1px solid rgba(0, 255, 136, 0.3);
+  color: var(--np-green);
+}
+
+/* ===== Spinner ===== */
+.nexus-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--np-border);
+  border-top-color: var(--np-primary);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ===== Price ===== */
+.nexus-price {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--np-yellow);
+  letter-spacing: 0.02em;
+}
