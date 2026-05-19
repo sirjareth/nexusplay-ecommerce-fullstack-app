@@ -14,7 +14,7 @@
         </div>
       </div>
 
-      <!-- Products Tab -->
+      <!-- ===== PRODUCTS TAB ===== -->
       <div v-if="activeTab === 'products'">
         <div v-if="loadingProducts" class="d-flex justify-content-center py-5">
           <div class="nexus-spinner"></div>
@@ -68,7 +68,7 @@
         </div>
       </div>
 
-      <!-- Orders Tab -->
+      <!-- ===== ORDERS TAB ===== -->
       <div v-if="activeTab === 'orders'">
         <div v-if="loadingOrders" class="d-flex justify-content-center py-5">
           <div class="nexus-spinner"></div>
@@ -89,8 +89,8 @@
               <thead>
                 <tr>
                   <th>Order ID</th>
-                  <th>User ID</th>
-                  <th>Items</th>
+                  <th>Customer</th>
+                  <th>Products Ordered</th>
                   <th>Total</th>
                   <th>Status</th>
                   <th>Date</th>
@@ -98,12 +98,44 @@
               </thead>
               <tbody>
                 <tr v-for="order in orders" :key="order._id">
-                  <td><span style="font-size: 0.75rem; color: var(--np-muted); font-family: monospace;">{{ order._id.slice(-8) }}</span></td>
-                  <td><span style="font-size: 0.75rem; color: var(--np-muted); font-family: monospace;">{{ order.userId.slice(-8) }}</span></td>
-                  <td><span style="color: var(--np-text);">{{ order.productsOrdered.length }} item(s)</span></td>
-                  <td><span class="nexus-price" style="font-size: 1rem;">₱{{ order.totalPrice.toLocaleString() }}</span></td>
+
+                  <!-- Order ID -->
+                  <td>
+                    <span style="font-size: 0.78rem; color: var(--np-accent); font-family: monospace; font-weight: 700;">
+                      #{{ order._id.slice(-8).toUpperCase() }}
+                    </span>
+                  </td>
+
+                  <!-- Customer (User ID) -->
+                  <td>
+                    <span style="font-size: 0.75rem; color: var(--np-muted); font-family: monospace;">
+                      {{ order.userId.slice(-8) }}
+                    </span>
+                  </td>
+
+                  <!-- Products breakdown -->
+                  <td>
+                    <div class="order-items">
+                      <div v-for="item in order.productsOrdered" :key="item.productId" class="order-item-row">
+                        <i class="bi bi-controller order-item-icon"></i>
+                        <span class="order-item-name">{{ getProductName(item.productId) }}</span>
+                        <span class="order-item-qty">× {{ item.quantity }}</span>
+                        <span class="order-item-sub">₱{{ item.subtotal.toLocaleString() }}</span>
+                      </div>
+                    </div>
+                  </td>
+
+                  <!-- Total -->
+                  <td>
+                    <span class="nexus-price" style="font-size: 1rem;">₱{{ order.totalPrice.toLocaleString() }}</span>
+                  </td>
+
+                  <!-- Status -->
                   <td><span class="nexus-badge-cyan">{{ order.status }}</span></td>
-                  <td><span style="color: var(--np-muted); font-size: 0.82rem;">{{ formatDate(order.orderedOn) }}</span></td>
+
+                  <!-- Date -->
+                  <td><span style="color: var(--np-muted); font-size: 0.82rem; white-space: nowrap;">{{ formatDate(order.orderedOn) }}</span></td>
+
                 </tr>
               </tbody>
             </table>
@@ -113,7 +145,7 @@
 
     </div>
 
-    <!-- Add Product Modal -->
+    <!-- ===== ADD PRODUCT MODAL ===== -->
     <div v-if="showAddModal" class="nexus-modal-overlay" @click.self="showAddModal = false">
       <div class="nexus-modal">
         <div class="modal-header-nexus">
@@ -146,7 +178,7 @@
       </div>
     </div>
 
-    <!-- Update Product Modal -->
+    <!-- ===== UPDATE PRODUCT MODAL ===== -->
     <div v-if="showUpdateModal" class="nexus-modal-overlay" @click.self="showUpdateModal = false">
       <div class="nexus-modal">
         <div class="modal-header-nexus">
@@ -195,11 +227,14 @@ const togglingId = ref(null)
 const orders = ref([])
 const loadingOrders = ref(false)
 const orderError = ref('')
+const productNameCache = ref({}) // productId -> name lookup
+
 const showAddModal = ref(false)
 const addingProduct = ref(false)
 const addError = ref('')
 const addForm = reactive({ name: '', description: '', price: '' })
 const addErrors = reactive({ name: '', description: '', price: '' })
+
 const showUpdateModal = ref(false)
 const updatingProduct = ref(false)
 const updateError = ref('')
@@ -215,12 +250,29 @@ const filteredProducts = computed(() => {
 function truncate(str, len) { return str && str.length > len ? str.slice(0, len) + '...' : str }
 function formatDate(d) { return new Date(d).toLocaleDateString('en-PH', { year: 'numeric', month: 'short', day: 'numeric' }) }
 
+// Resolve productId to product name using the already-loaded products list
+// Falls back to fetching individually if not found
+function getProductName(productId) {
+  // Check cache first
+  if (productNameCache.value[productId]) return productNameCache.value[productId]
+  // Check loaded products list
+  const found = products.value.find(p => p._id === productId)
+  if (found) {
+    productNameCache.value[productId] = found.name
+    return found.name
+  }
+  // Show short ID as fallback
+  return `#${productId.slice(-8)}`
+}
+
 async function fetchProducts() {
   loadingProducts.value = true
   productError.value = ''
   try {
     const res = await api.get('/products/all')
     products.value = res.data
+    // Pre-populate cache from loaded products
+    res.data.forEach(p => { productNameCache.value[p._id] = p.name })
   } catch { productError.value = 'Failed to load products.' }
   finally { loadingProducts.value = false }
 }
@@ -326,6 +378,25 @@ onMounted(fetchProducts)
 .btn-action-activate { color: var(--np-green); border-color: var(--np-green); }
 .btn-action-activate:hover { background: var(--np-green); color: var(--np-bg); }
 .btn-action:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Order items breakdown */
+.order-items { display: flex; flex-direction: column; gap: 0.35rem; }
+.order-item-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--np-border);
+  border-radius: 4px;
+  padding: 0.3rem 0.6rem;
+  white-space: nowrap;
+}
+.order-item-icon { color: var(--np-muted); font-size: 0.75rem; flex-shrink: 0; }
+.order-item-name { color: var(--np-text); font-size: 0.82rem; font-weight: 600; flex: 1; }
+.order-item-qty { color: var(--np-accent); font-size: 0.78rem; font-weight: 700; flex-shrink: 0; }
+.order-item-sub { color: var(--np-yellow); font-size: 0.78rem; font-family: var(--font-display); flex-shrink: 0; margin-left: auto; }
+
+/* Modal */
 .nexus-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(4px); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 1rem; }
 .nexus-modal { background: var(--np-card); border: 1px solid var(--np-border); border-radius: 12px; padding: 2rem; width: 100%; max-width: 480px; }
 .modal-header-nexus { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }

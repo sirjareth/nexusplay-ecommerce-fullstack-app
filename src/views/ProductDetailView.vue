@@ -17,14 +17,22 @@
 
       <div class="row g-5 align-items-start mt-1">
 
+        <!-- Cover -->
         <div class="col-12 col-md-5">
           <div class="detail-cover">
-            <div class="detail-cover-inner">
+            <img
+              v-if="getGameImage(product.name)"
+              :src="getGameImage(product.name)"
+              :alt="product.name"
+              class="detail-cover-img"
+            />
+            <div v-else class="detail-cover-inner">
               <i class="bi bi-controller detail-cover-icon"></i>
             </div>
           </div>
         </div>
 
+        <!-- Info -->
         <div class="col-12 col-md-7">
           <div class="d-flex gap-2 mb-3">
             <span v-if="product.isActive" class="nexus-badge-cyan">In Stock</span>
@@ -39,6 +47,7 @@
             <i :class="cartSuccess ? 'bi bi-check-circle' : 'bi bi-exclamation-triangle'" class="me-2"></i>{{ cartMsg }}
           </div>
 
+          <!-- Add to cart -->
           <div v-if="auth.isLoggedIn && !auth.isAdmin && product.isActive">
             <div class="d-flex align-items-center gap-3 mb-3">
               <label class="nexus-label mb-0">Qty</label>
@@ -77,6 +86,7 @@ import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 import api from '../api'
+import { getGameImage } from '../utils/gameImages'
 
 const route = useRoute()
 const auth = useAuthStore()
@@ -128,12 +138,28 @@ onMounted(fetchProduct)
 <style scoped>
 .back-link { color: var(--np-muted); text-decoration: none; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; transition: color 0.2s; }
 .back-link:hover { color: var(--np-primary); }
-.detail-cover { border-radius: 8px; overflow: hidden; aspect-ratio: 3/4; background: linear-gradient(135deg, #1a1a2e, #16213e); border: 1px solid var(--np-border); }
+
+.detail-cover {
+  border-radius: 8px;
+  overflow: hidden;
+  aspect-ratio: 3/4;
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  border: 1px solid var(--np-border);
+}
+
+.detail-cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .detail-cover-inner { display: flex; align-items: center; justify-content: center; height: 100%; background: linear-gradient(135deg, rgba(123,47,255,0.2), rgba(255,60,110,0.2)); }
 .detail-cover-icon { font-size: 6rem; color: var(--np-border); }
+
 .product-detail-title { font-family: var(--font-display); font-size: 3rem; color: var(--np-text); letter-spacing: 0.03em; line-height: 1.05; margin-bottom: 1rem; }
 .product-detail-desc { color: var(--np-muted); font-size: 0.95rem; line-height: 1.7; margin-bottom: 1.5rem; }
 .detail-price { font-family: var(--font-display); font-size: 2.5rem; color: var(--np-yellow); letter-spacing: 0.02em; }
+
 .qty-control { display: flex; align-items: center; border: 1.5px solid var(--np-border); border-radius: 4px; overflow: hidden; }
 .qty-btn { background: var(--np-surface); border: none; color: var(--np-text); width: 36px; height: 36px; font-size: 1.1rem; cursor: pointer; transition: background 0.2s; }
 .qty-btn:hover { background: var(--np-border); }
