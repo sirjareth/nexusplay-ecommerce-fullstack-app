@@ -121,7 +121,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCartStore } from '../stores/cart'
-import api from '../api'
+import api from '../../api'
 
 const cart = useCartStore()
 const router = useRouter()

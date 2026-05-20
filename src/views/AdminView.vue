@@ -216,7 +216,7 @@
 
 <script setup>
 import { ref, computed, onMounted, reactive } from 'vue'
-import api from '../api'
+import api from '../../api'
 
 const activeTab = ref('products')
 const search = ref('')

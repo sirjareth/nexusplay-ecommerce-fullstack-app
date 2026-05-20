@@ -85,7 +85,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
-import api from '../api'
+import api from '../../api'
 import { getGameImage } from '../utils/gameImages'
 
 const route = useRoute()
