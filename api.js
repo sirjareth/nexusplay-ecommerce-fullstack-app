@@ -1,10 +1,10 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:4000',
+  baseURL: import.meta.env.VITE_JOB_TRACKER_API
 })
 
-// Automatically attach Bearer token to every request if available
+
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token')
   if (token) {
