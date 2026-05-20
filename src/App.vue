@@ -1,6 +1,6 @@
 <template>
   <div class="noise-bg app-wrapper">
-    <AppNavbar />
+    <NavbarComponent />
     <main class="app-main">
       <router-view v-slot="{ Component }">
         <transition name="page" mode="out-in">
@@ -13,7 +13,7 @@
 </template>
 
 <script setup>
-import AppNavbar from './components/AppNavbar.vue'
+import NavbarComponent from './components/NavbarComponent.vue'
 import AppFooter from './components/AppFooter.vue'
 </script>
 
